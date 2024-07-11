@@ -146,6 +146,7 @@ SENSORS: tuple[GrocySensorEntityDescription, ...] = (
         native_unit_of_measurement=PRODUCTS,
         state_class=SensorStateClass.MEASUREMENT,
         icon="mdi:food",
+        # TODO: re-enable this
         # exists_fn=lambda entities: "to_defrost" in entities,
         exists_fn=lambda entities: True,
         attributes_fn=lambda data: {
