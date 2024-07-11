@@ -171,7 +171,7 @@ class GrocyData:
     async def async_update_meal_plan_to_defrost(self):
         """Update meal plan data."""
         tomorrow = datetime.now() + timedelta(1)
-        query_filter = [f"day=={tomorrow.date()}"]
+        query_filter = [f"day={tomorrow.date()}"]
 
         def wrapper():
             # meal_plan = self.api.meal_plan(get_details=True, query_filters=query_filter)[0]
