@@ -149,7 +149,7 @@ SENSORS: tuple[GrocySensorEntityDescription, ...] = (
         # exists_fn=lambda entities: "to_defrost" in entities,
         exists_fn=lambda entities: True,
         attributes_fn=lambda data: {
-            "ingredients": [x.as_dict() for x in data],
+            "ingredients": [x.dict() for x in data],
             "count": len(data)
         }
         # attributes_fn=lambda data: {
