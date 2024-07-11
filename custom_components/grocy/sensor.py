@@ -140,6 +140,34 @@ SENSORS: tuple[GrocySensorEntityDescription, ...] = (
             "count": len(data),
         },
     ),
+    GrocySensorEntityDescription(
+        key="to_defrost",
+        name="Grocy Needs Defrosted",
+        native_unit_of_measurement=PRODUCTS,
+        state_class=SensorStateClass.MEASUREMENT,
+        icon="mdi:food",
+        # exists_fn=lambda entities: "to_defrost" in entities,
+        exists_fn=lambda entities: True,
+        attributes_fn=lambda data: {
+            "ingredients": [x.as_dict() for x in data],
+            "count": len(data)
+        }
+        # attributes_fn=lambda data: {
+        #     "meals": [
+        #         {
+        #             "recipe_id": meal["recipe_id"],
+        #             "day": meal["day"],
+        #             "ingredients": [
+        #                 ingredient
+        #                 for ingredient in meal["ingredients"]
+        #                 if ingredient["location"] == "desired_location"
+        #             ],
+        #         }
+        #         for meal in data
+        #     ],
+        #     "count": len(data),
+        # },
+    ),
 )
 
 

@@ -11,6 +11,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from pygrocy.data_models.battery import Battery
+from pygrocy.grocy_api_client import StockResponse
 
 from .const import (
     ATTR_BATTERIES,
@@ -56,6 +57,7 @@ class GrocyData:
             ATTR_OVERDUE_TASKS: self.async_update_overdue_tasks,
             ATTR_BATTERIES: self.async_update_batteries,
             ATTR_OVERDUE_BATTERIES: self.async_update_overdue_batteries,
+            "to_defrost": self.async_update_meal_plan_to_defrost
         }
 
     async def async_update_data(self, entity_key):
@@ -163,6 +165,22 @@ class GrocyData:
             meal_plan = self.api.meal_plan(get_details=True, query_filters=query_filter)
             plan = [MealPlanItemWrapper(item) for item in meal_plan]
             return sorted(plan, key=lambda item: item.meal_plan.day)
+
+        return await self.hass.async_add_executor_job(wrapper)
+
+    async def async_update_meal_plan_to_defrost(self):
+        """Update meal plan data."""
+        tomorrow = datetime.now() + timedelta(1)
+        query_filter = [f"day=={tomorrow.date()}"]
+
+        def wrapper():
+            # meal_plan = self.api.meal_plan(get_details=True, query_filters=query_filter)[0]
+            # plan = [MealPlanItemWrapper(item) for item in meal_plan]
+            ingredients_to_defrost: List[StockResponse] = self.api.to_defrost(get_details=True, query_filters=query_filter)
+
+            return ingredients_to_defrost
+
+            # return sorted(plan, key=lambda item: item.meal_plan.day)
 
         return await self.hass.async_add_executor_job(wrapper)
 
